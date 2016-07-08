@@ -1,0 +1,52 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          jekyll-server
+# Required-Start:    
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: This is a test daemon
+# Description:       This is a test daemon
+#                    This provides example about how to
+#                    write a Init script.
+### END INIT INFO
+
+######################################################
+### Configuration
+######################################################
+PID="/var/run/jekyll-server.pid"
+
+# The location of the git repository
+BLOG="/home/sogeuni/www/blog/"
+
+# The location if the jekyll executable
+DEAMON="/usr/local/bin/jekyll"
+
+# --config   : the location of your config file
+DEAMON_OPT="serve"
+# The user the git repository belongs to
+USER="sogeuni"
+# The group the git repository belongs to
+GROUP="sogeuni"
+
+######################################################
+### Script
+######################################################
+
+case "$1" in
+  start)
+    echo "Starting Jekyll"
+    start-stop-daemon --start --quiet -b -m -p $PID --chuid $USER:$GROUP --chdir $BLOG --exec $DEAMON -- $DEAMON_OPT
+  ;;
+  stop)
+    echo "Stopping Jekyll"
+    start-stop-daemon --stop --quiet --pidfile $PID
+    rm -f $PID
+  ;;
+  *)
+    echo "Usage: service jekyll-server {start|stop}"
+    exit 1
+  ;;
+esac
+exit 0
